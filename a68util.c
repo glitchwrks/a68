@@ -76,7 +76,7 @@ This module contains the following utility packages:
 #include "a68.h"
 #include <string.h>
 #include <ctype.h>
-#include <malloc.h> /* for lcc-32 HRJ */
+// #include <malloc.h> /* for lcc-32 HRJ */
 /* #include <alloc.h> for Turbo C HRJ */
 #include <stdio.h>
 #include <stdlib.h>

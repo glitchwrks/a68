@@ -113,7 +113,7 @@ TOKEN token;
 
 static int done, extend, ifsp, off;
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char **argv;
 {
