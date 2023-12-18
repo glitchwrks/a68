@@ -395,7 +395,7 @@ typedef struct _symbol SYMBOL;
 typedef struct {
     unsigned attr;
     unsigned valu;
-    char oname[5];
+    char oname[7];
 } OPCODE;
 
 /*  Utility package (A68UTIL.C) hex file output routines:		*/
