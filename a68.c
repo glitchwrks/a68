@@ -357,7 +357,8 @@ static void normal_op(void)
 			    attrib = NONE;  break;
 			}
 
-	    case SEP:	bytes = 3;
+	    case SEP:	lex();
+	    		bytes = 3;
 			if (numctl == NEEDBYTE) {
 			    if (operand > 0xff && operand < 0xff00) { /* was ff80 */
 				error('V');  return;
@@ -401,6 +402,7 @@ static void normal_op(void)
 static void pseudo_op(void)
 {
     SCRATCH char *s;
+    SCRATCH int c;
     SCRATCH unsigned *o, u;
     SCRATCH SYMBOL *l;
 
@@ -461,17 +463,38 @@ static void pseudo_op(void)
 		    break;
 
 	case FCB:   do_label();
-		    do {
-			if ((lex() -> attr & TYPE) == SEP) u = 0;
-			else {
-			    unlex();
-			    if ((u = expr()) > 0xff && u < 0xff00) { /* was ff80 */
-				u = 0;  error('V');
-			    }
-			}
-			*o++ = low(u);  ++bytes;
-		    } while ((token.attr & TYPE) == SEP);
-		    break;
+
+			do {
+				switch (lex() -> attr & TYPE) {
+						case SEP:
+							unlex();
+							u = 0;
+							goto save_byte;
+
+						case STR:
+							trash();
+							pushc(c = popc());
+						
+							if (c == ',' || c == '\n') {
+								for (s = token.sval; *s; *o++ = *s++) ++bytes;
+								break;
+							}
+
+						default:
+							unlex();
+							if ((u = expr()) > 0xff && u < 0xff80) {
+								u = 0;
+								error('V');
+							}
+
+						save_byte:
+							*o++ = low(u);
+							++bytes;
+							break;
+				}
+			} while ((lex() -> attr & TYPE) == SEP);
+			
+			break;
 
 	case FCC:   do_label();
 		    while ((lex() -> attr & TYPE) != EOL) {

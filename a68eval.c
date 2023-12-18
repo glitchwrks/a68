@@ -140,7 +140,7 @@ unsigned pre;
 	    case IMM:	exp_error('S');  break;
 
 	    case SEP:	if (pre != START) unlex();
-	    case EOL:	exp_error('E');  return (u); /* return had no value HRJ*/
+	    case EOL:	unlex(); exp_error('E');  return (u); /* return had no value HRJ*/
 	    case OPR:	if (!(token.attr & UNARY)) { exp_error('E');  break; }
 			u = (op == '*' ? pc :
 			    eval((op == '+' || op == '-') ?
@@ -162,9 +162,9 @@ unsigned pre;
 				case REG:
 				case IMM:   exp_error('S');  break;
 
-				case SEP:   if (pre != START) unlex();
+				case SEP:
 				case EOL:   if (pre == LPREN) exp_error('(');
-					    return u;
+					    unlex(); return u;
 
 				case STR:
 				case VAL:   exp_error('E');  break;
