@@ -213,7 +213,7 @@ void asm_line(void)
 	    pushc(i);  pops(label);
 		/* HRJ remove colon from label */
 		j = strlen(label); if (label[j-1]==':') label[j-1] ='\0';
-		/* printf("asm_Line>>%s<<\n",label);  /* HRJ diagnostic */
+		// printf("asm_Line>>%s<<\n",label);  /* HRJ diagnostic */
 	    if (find_operator(label)) { label[0] = '\0';  error('L'); }
 	}
 	else {
@@ -267,7 +267,7 @@ static void do_label(void)
 	    }
 	}
 	else {
-	    if (l = find_symbol(label)) {
+	    if ((l = find_symbol(label))) {
 		l -> attr = VAL;
 		if (l -> valu != pc) error('M');
 	    }
@@ -380,7 +380,7 @@ static void normal_op(void)
 			}
 
 			if (attrib & ~(DIROK + INDEX)) {
-			    error(attrib & REGREQ || (attrib & (REGOPT + INDEX)
+			    error((attrib & REGREQ) || ((attrib & (REGOPT + INDEX))
 				== (REGOPT + INDEX)) ? 'R' : 'S');
 			    bytes = 3;  return;
 			}
@@ -450,7 +450,7 @@ static void pseudo_op(void)
 			    }
 			}
 			else {
-			    if (l = find_symbol(label)) {
+			    if ((l = find_symbol(label))) {
 				l -> attr = VAL;
 				address = expr();
 				if (forwd) error('P');
@@ -575,7 +575,7 @@ static void pseudo_op(void)
 			    }
 			}
 			else {
-			    if (l = find_symbol(label)) {
+			    if ((l = find_symbol(label))) {
 				address = expr();
 				if (forwd) error('P');
 				else if (l -> attr & SOFT) {

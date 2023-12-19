@@ -461,7 +461,8 @@ SYMBOL *sp;
     if (sp) {
 	list_sym(sp -> left);
 	fprintf(list,"%04x  %-10s",sp -> valu,sp -> sname);
-	if (col = ++col % SYMCOLS) fprintf(list,"    ");
+	col++;
+	if ((col = col % SYMCOLS)) fprintf(list,"    ");
 	else {
 	    fprintf(list,"\n");
 	    if (sp -> right) check_page();
